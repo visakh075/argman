@@ -1,4 +1,4 @@
 cd ..
-bash make
+bash make.sh
 cd test
-gcc -Wall -0 argman_handler argman_handler.c
+gcc -Wall -o argman_handler argman_handler.c ../argman.o
