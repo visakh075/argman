@@ -10,44 +10,21 @@ int main(int argc,char * argv[])
     char * input="";
     char * output="";
     char * key="";
-    //printf("\n\n_________________________________________________________________");
+    int method;
     map_init(&map,op,exp,conf,def,1,argc,argv);
-//    explore_map(&map);
-    //showmap(map);
-    wars(map);
-    //printf("\nfilename:%s",map.branch[map.n_branch-1].param[0]);
-    /*
-    if(!error(map))
-    {
-        for(int i=1;i<argc;i++)
-        {printf("%s ",argv[i]);}
-        printf("\t-- >");
-        //if(safe('e',map)) printf("enc ");
-        //if(safe('d',map)) printf("dec ");
-        
-        if(safe('r',map))
-        {
-            //printf("rep ");
-            //output=NULL;
-        }
-        if(safe('n',map)) 
-        {
-            //printf("new ");
-            output=branch('n',map)->param[0];
-        }
-        
-        if(safe('k',map))
-        {
-            //printf("exkey ");
-            key=branch('k',map)->param[0];
-        }
-        
-        input=branch('.',map)->param[0];
 
-        printf("i/p :%s ",input);
-        printf("o/p :%s ",output);
-        printf("k/f :%s ",key);
-        printf("\n");
-    }*/
-    //else{printf("error ");}
+    if(!error(map)){
+    if(safe('e',map))
+    {method=0;}
+    if(safe('d',map))
+    {method=1;}
+    input=branch('.',map)->param[0];
+    if(safe('n',map))
+    {output=branch('n',map)->param[0];}
+    if(safe('r',map))
+    {output=branch('.',map)->param[0];}
+    if(safe('k',map))
+    {key=branch('k',map)->param[0];}
+    for(int i=1;i<argc;i++)printf("%s ",argv[i]);
+    }
 }

@@ -130,20 +130,20 @@ void explore_map(arg_map * map){
             }
 }
 void wars(arg_map map){
-    if(map.d_param!=map.ic){printf("\n%s expectes %d argument(s),given %d\n",map.arg_list[0],map.d_param,map.ic);}
+    if(map.d_param!=map.ic){printf(" %s expectes %d argument(s),given %d;",map.arg_list[0],map.d_param,map.ic);}
     for(int i=0;i<argsize(map.opt);i++)
     {
         int err=map.err[i];
         if(err==1)
         {
-            printf("%c: argumnent(s) missing, require %d\n",map.opt[i],map.ex_param[i]);
+            printf(" %c: argumnent(s) missing, require %d;",map.opt[i],map.ex_param[i]);
         }
         if(err==2)
         {
             for(int j=i+1;j<argsize(map.opt);j++)
             {
                 if(map.conf[i]==map.conf[j] && map.conf[i]>-1)
-                {printf(" %c conflicts with %c ,",map.opt[i],map.opt[j]);}
+                {printf(" %c conflicts with %c;",map.opt[i],map.opt[j]);}
             }
 
         }
