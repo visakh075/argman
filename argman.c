@@ -32,15 +32,17 @@ void map_init(arg_map * map,char * list,int * ex_param,int * conf,int * is_def,i
     }
 void showmap(arg_map map){
     printf("\nmap of: ");
-    for(int i=0;i<map.argc;i++){printf("%s(%d,%d) ",map.arg_list[i],map.flag[i],map.ass[i]);}//printf("\n");
+    for(int i=0;i<map.argc;i++){printf("%s ",map.arg_list[i]);}//printf("\n");
     //matrix
     
     printf("\nOpti\t");for(int m=0;m<argsize(map.opt);m++){printf("%c\t",map.opt[m]);}printf("\n");
     printf("Exp_p\t");for(int m=0;m<argsize(map.opt);m++){printf("%d\t",map.ex_param[m]);}printf("\n");
-    printf("Pos\t");for(int m=0;m<argsize(map.opt);m++){printf("%d\t",map.pos[m]);}printf("\n");
     printf("Confl\t");for(int m=0;m<argsize(map.opt);m++){printf("%d\t",map.conf[m]);}printf("\n");
-    printf("Error\t");for(int m=0;m<argsize(map.opt);m++){printf("%d\t",map.err[m]);}printf("\n");
     printf("is_def\t");for(int m=0;m<argsize(map.opt);m++){printf("%d\t",map.is_def[m]);}printf("\n");
+    
+    printf("\n");
+    printf("Pos\t");for(int m=0;m<argsize(map.opt);m++){printf("%d\t",map.pos[m]);}printf("\n");
+    printf("Error\t");for(int m=0;m<argsize(map.opt);m++){printf("%d\t",map.err[m]);}printf("\n");
     printf("safe\t");for(int m=0;m<argsize(map.opt);m++){printf("%d\t",safe(map.opt[m],map));}printf("\n");
     }  
 size_t argsize(char * filename){
@@ -128,58 +130,57 @@ void explore_map(arg_map * map){
             }
 }
 void wars(arg_map map){
-    printf("\n");
+    if(map.d_param!=map.ic){printf("\n%s expectes %d argument(s),given %d\n",map.arg_list[0],map.d_param,map.ic);}
     for(int i=0;i<argsize(map.opt);i++)
     {
         int err=map.err[i];
         if(err==1)
         {
-            printf("%c argumnent missing ,",map.opt[i]);
+            printf("%c: argumnent(s) missing, require %d\n",map.opt[i],map.ex_param[i]);
         }
         if(err==2)
         {
-            printf(" %c conflict error ,",map.opt[i]);
+            for(int j=i+1;j<argsize(map.opt);j++)
+            {
+                if(map.conf[i]==map.conf[j] && map.conf[i]>-1)
+                {printf(" %c conflicts with %c ,",map.opt[i],map.opt[j]);}
+            }
+
         }
     }
-    if(map.d_param!=map.ic){printf("i error ,");}
-    printf("\n");
 }
 int safe(char c,arg_map map)
 {
     int safe=0;
-    // non conflict
-    // 
-    for(int m=0;m<argsize(map.opt);m++)
+    size_t size=argsize(map.opt);
+    for(int i=0;i<size;i++)
     {
-        if(map.opt[m]==c)
+        int d_conf=0;
+        for(int j=0;j<size;j++)
         {
-            int is_conf=0;// searching for other this opt is default
-            for(int n=0;n<argsize(map.opt);n++)
+            if(i!=j && (map.conf[i]==map.conf[j]) && (map.conf[j]>-1))
             {
-                if(map.conf[m]==map.conf[n] && map.conf[n]>-1)// same conf
+                if(map.pos[j]>0)
                 {
-                    if(map.pos[n]>0) // same conf number and the other elemnt exist
-                    {
-                        is_conf=1;break;
-                    }
+                    d_conf=1;
+                    break;
                 }
-
             }
+        }
 
-            if((map.err[m]==0 && map.pos[m]>0) || (map.is_def[m]==1 && !is_conf))
-            {
-               safe=1;break;
-            }
-            //if(map.pos[m]>0 || map.is_def[m]>0)
-            //{
-            //    if(map.err[m]==0 && map.ic==map.d_param)
-            //    {
-            //        safe=1;break;
-            //    }
-            //}
+
+        if(map.opt[i]==c) // existing opt
+        {
+            if(map.pos[i]>0 && map.err[i]==0)
+            safe=1;
+            else if(map.is_def[i] && !d_conf)
+            safe=1;
         }
     }
-    return(safe);
+    if(safe==1 && (map.d_param==map.ic))
+    return(1);
+    else
+    return(0);
 }
 int error(arg_map map){
     for(int i=0;i<argsize(map.opt);i++)

@@ -10,12 +10,13 @@ int main(int argc,char * argv[])
     char * input="";
     char * output="";
     char * key="";
-
+    //printf("\n\n_________________________________________________________________");
     map_init(&map,op,exp,conf,def,1,argc,argv);
 //    explore_map(&map);
-    showmap(map);
-//    wars(map);
+    //showmap(map);
+    wars(map);
     //printf("\nfilename:%s",map.branch[map.n_branch-1].param[0]);
+    /*
     if(!error(map))
     {
         for(int i=1;i<argc;i++)
@@ -47,6 +48,6 @@ int main(int argc,char * argv[])
         printf("o/p :%s ",output);
         printf("k/f :%s ",key);
         printf("\n");
-    }
+    }*/
     //else{printf("error ");}
 }

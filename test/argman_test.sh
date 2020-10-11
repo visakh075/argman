@@ -1,4 +1,4 @@
-clear
+clear && printf '\e[3J'
 ./argman_handler
 ./argman_handler ip
 ./argman_handler -e
